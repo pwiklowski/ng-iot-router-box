@@ -1,0 +1,13 @@
+{
+  "name": "IoT.Christmas.box",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:pwiklowski/IoT.Christmas.box.git",
+  "author": "Pawel Wiklowski <pawel.wiklowski@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "lame": "^1.2.4",
+    "node-mp3-player": "^1.0.3",
+    "speaker": "^0.4.2"
+  }
+}
