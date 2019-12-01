@@ -1,6 +1,7 @@
-const { spawn } = require("child_process");
+import { spawn } from "child_process";
 
-class Player {
+export default class Player {
+  player_process;
   constructor() {
     this.player_process = null;
   }
@@ -19,5 +20,3 @@ class Player {
     this.player_process = null;
   }
 }
-
-module.exports = Player;

@@ -8,6 +8,14 @@
   "dependencies": {
     "lame": "^1.2.4",
     "node-mp3-player": "^1.0.3",
-    "speaker": "^0.4.2"
+    "speaker": "^0.4.2",
+    "zigbee-herdsman": "^0.1.17"
+  },
+  "scripts": {
+    "build": "tsc",
+    "run": "tsc; node ./build/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.14"
   }
 }
