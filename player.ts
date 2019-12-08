@@ -19,4 +19,8 @@ export default class Player {
     }
     this.player_process = null;
   }
+
+  isPlaying() {
+    return this.player_process !== null;
+  }
 }
