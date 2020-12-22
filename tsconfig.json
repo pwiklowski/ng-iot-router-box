@@ -9,6 +9,7 @@
     "removeComments": true,
     "noImplicitReturns": true,
     "esModuleInterop": true,
+    "sourceMap": true,
     // "noUnusedLocals": true,
     //"strict": true,
     "outDir": "build",

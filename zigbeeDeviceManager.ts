@@ -9,17 +9,16 @@ export default class ZigbeeDeviceManager {
       serialPort: {
         baudRate: 115200,
         rtscts: true,
-        path: port
-      }
+        path: port,
+      },
     });
-    this.herdsman.on("deviceJoined", data =>
-      console.log("event", "deviceJoined", data)
-    );
+    this.herdsman.on("deviceJoined", (data) => console.log("event", "deviceJoined", data));
     this.herdsman.on("message", this.onMessage.bind(this));
   }
 
   async onReady() {
-    await this.herdsman.permitJoin(60, function(err) {
+    console.log("Pairing");
+    await this.herdsman.permitJoin(60, function (err) {
       if (err) console.log(err);
     });
     console.log("Server is ready.");
