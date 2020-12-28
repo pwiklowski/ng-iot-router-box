@@ -1,5 +1,5 @@
 import * as fs from "fs";
-import { CONFIG_FILE, IOT_SERVER } from "./../config";
+import { IOT_SERVER } from "./../config";
 import { Permission, DeviceConfig, AuthData, IotDevice } from "@wiklosoft/ng-iot";
 
 const switchDeviceConfig: DeviceConfig = {
@@ -27,10 +27,13 @@ const switchDeviceConfig: DeviceConfig = {
 
 export class SwitchDevice extends IotDevice {
   zigbeeAddress: string;
+  configFile: string;
 
-  constructor(zigbeeAddress: string) {
-    super(IOT_SERVER, switchDeviceConfig);
+  constructor(zigbeeAddress: string, name: string, deviceUuid: string, configFile: string) {
+    super(IOT_SERVER, { ...switchDeviceConfig, name, deviceUuid });
     this.zigbeeAddress = zigbeeAddress;
+
+    this.configFile = configFile;
   }
 
   getZigbeeAddress() {
@@ -38,17 +41,22 @@ export class SwitchDevice extends IotDevice {
   }
 
   handleValueUpdate(value: object) {
-    if (value.onOff !== undefined) {
-      const newValue = { onOff: value.onOff };
-      this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", newValue);
+    if (value["onOff"] !== undefined) {
+      if (value["onOff"] === 0) {
+        this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: 1 });
+        this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: 0 });
+      }
+    } else if (value["32768"] !== undefined) {
+      this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: value["32768"] });
+      this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: 0 });
     }
   }
 
   async readAuthData() {
-    const data = (await fs.promises.readFile(CONFIG_FILE)).toString("utf-8");
+    const data = (await fs.promises.readFile(this.configFile)).toString("utf-8");
     this.auth = JSON.parse(data) as AuthData;
   }
   async saveAuthData(auth: AuthData) {
-    await fs.promises.writeFile(CONFIG_FILE, JSON.stringify(auth, null, 2));
+    await fs.promises.writeFile(this.configFile, JSON.stringify(auth, null, 2));
   }
 }
