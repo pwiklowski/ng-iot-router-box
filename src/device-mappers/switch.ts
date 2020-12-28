@@ -1,6 +1,5 @@
-import * as fs from "fs";
-import { IOT_SERVER } from "./../config";
-import { Permission, DeviceConfig, AuthData, IotDevice } from "@wiklosoft/ng-iot";
+import { Permission, DeviceConfig } from "@wiklosoft/ng-iot";
+import { ZigbeeDevice } from "./zigbeeDevice";
 
 const switchDeviceConfig: DeviceConfig = {
   name: "Zigbee Button",
@@ -25,38 +24,23 @@ const switchDeviceConfig: DeviceConfig = {
   },
 };
 
-export class SwitchDevice extends IotDevice {
-  zigbeeAddress: string;
-  configFile: string;
+export class SwitchDevice extends ZigbeeDevice {
+  pressed: boolean;
 
   constructor(zigbeeAddress: string, name: string, deviceUuid: string, configFile: string) {
-    super(IOT_SERVER, { ...switchDeviceConfig, name, deviceUuid });
-    this.zigbeeAddress = zigbeeAddress;
-
-    this.configFile = configFile;
+    super(zigbeeAddress, { ...switchDeviceConfig, name, deviceUuid }, configFile);
   }
 
-  getZigbeeAddress() {
-    return this.zigbeeAddress;
-  }
-
-  handleValueUpdate(value: object) {
-    if (value["onOff"] !== undefined) {
-      if (value["onOff"] === 0) {
-        this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: 1 });
-        this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: 0 });
-      }
-    } else if (value["32768"] !== undefined) {
-      this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: value["32768"] });
+  handleValueUpdate(value: any) {
+    if (this.pressed) {
+      this.pressed = false;
+    } else if (value.genOnOff.attributes.onOff === 0) {
+      this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: 1 });
+      this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: 0 });
+      this.pressed = true;
+    } else if (value.genOnOff.attributes.onOff === 1) {
+      this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: value.genOnOff.attributes["32768"] });
       this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { onOff: 0 });
     }
-  }
-
-  async readAuthData() {
-    const data = (await fs.promises.readFile(this.configFile)).toString("utf-8");
-    this.auth = JSON.parse(data) as AuthData;
-  }
-  async saveAuthData(auth: AuthData) {
-    await fs.promises.writeFile(this.configFile, JSON.stringify(auth, null, 2));
   }
 }

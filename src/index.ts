@@ -15,8 +15,6 @@ const BUTTON_2 = "0x00158d0002048a20";
     await deviceManager.start();
 
     deviceManager.onDeviceUpdate = (addr, value) => {
-      console.log("onDeviceUpdate", addr, value);
-
       iotDeviceManager.handleDeviceUpdate(addr, value);
     };
   } catch (err) {

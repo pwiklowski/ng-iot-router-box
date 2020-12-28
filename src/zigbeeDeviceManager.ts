@@ -29,9 +29,7 @@ export default class ZigbeeDeviceManager {
 
   onMessage(msg) {
     if (msg.type === "attributeReport") {
-      const data = msg.data;
-      const addr = msg.device.ieeeAddr;
-      this.onDeviceUpdate(addr, data);
+      this.onDeviceUpdate(msg.endpoint.deviceIeeeAddress, msg.endpoint.clusters);
     }
   }
 
