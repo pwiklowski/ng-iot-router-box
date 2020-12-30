@@ -1,3 +1,4 @@
+import { CLIENT_ID, CLIENT_SECRET } from "./../config";
 import * as fs from "fs";
 import { IOT_SERVER } from "../config";
 import { DeviceConfig, AuthData, IotDevice } from "@wiklosoft/ng-iot";
@@ -7,10 +8,12 @@ export class ZigbeeDevice extends IotDevice {
   configFile: string;
   pressed: boolean;
 
-  constructor(zigbeeAddress: string, config: DeviceConfig, configFile: string) {
-    super(IOT_SERVER, config);
+  constructor(zigbeeAddress: string, config: DeviceConfig) {
+    super(IOT_SERVER, config, {
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
+    });
     this.zigbeeAddress = zigbeeAddress;
-    this.configFile = configFile;
   }
 
   getZigbeeAddress() {
@@ -20,10 +23,10 @@ export class ZigbeeDevice extends IotDevice {
   handleValueUpdate(value: any) {}
 
   async readAuthData() {
-    const data = (await fs.promises.readFile(this.configFile)).toString("utf-8");
+    const data = (await fs.promises.readFile(this.getAuthConfigFilename())).toString("utf-8");
     this.auth = JSON.parse(data) as AuthData;
   }
   async saveAuthData(auth: AuthData) {
-    await fs.promises.writeFile(this.configFile, JSON.stringify(auth, null, 2));
+    await fs.promises.writeFile(this.getAuthConfigFilename(), JSON.stringify(auth, null, 2));
   }
 }

@@ -29,8 +29,8 @@ const switchDeviceConfig: DeviceConfig = {
 export class SwitchDevice extends ZigbeeDevice {
   pressed: boolean;
 
-  constructor(zigbeeAddress: string, name: string, deviceUuid: string, configFile: string) {
-    super(zigbeeAddress, { ...switchDeviceConfig, name, deviceUuid }, configFile);
+  constructor(zigbeeAddress: string, name: string, deviceUuid: string) {
+    super(zigbeeAddress, { ...switchDeviceConfig, name, deviceUuid });
   }
 
   handleValueUpdate(value: any) {

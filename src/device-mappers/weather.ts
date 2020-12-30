@@ -33,8 +33,8 @@ const weatherDeviceConfig: DeviceConfig = {
 export class WeatherSensor extends ZigbeeDevice {
   pressed: boolean;
 
-  constructor(zigbeeAddress: string, name: string, deviceUuid: string, configFile: string) {
-    super(zigbeeAddress, { ...weatherDeviceConfig, name, deviceUuid }, configFile);
+  constructor(zigbeeAddress: string, name: string, deviceUuid: string) {
+    super(zigbeeAddress, { ...weatherDeviceConfig, name, deviceUuid });
   }
 
   handleValueUpdate(value: any) {
