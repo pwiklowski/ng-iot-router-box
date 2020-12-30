@@ -42,6 +42,6 @@ export class WeatherSensor extends ZigbeeDevice {
     const humidity = value.msRelativeHumidity.attributes.measuredValue / 100;
     const pressure = value.msPressureMeasurement.attributes.measuredValue;
 
-    this.updateValue("c391b0c7-0464-4a8d-aee8-0fe307a85247", { temperature, humidity, pressure });
+    this.updateValue(VARIABLE_UUID, { temperature, humidity, pressure });
   }
 }

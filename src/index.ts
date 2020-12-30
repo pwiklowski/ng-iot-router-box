@@ -1,10 +1,6 @@
 import { IotDeviceManager } from "./iot-device-manager";
 import ZigbeeDeviceManager from "./zigbeeDeviceManager";
 
-const DOOR_SENSOR = "0x00158d0002c98376";
-
-const BUTTON_2 = "0x00158d0002048a20";
-
 (async () => {
   const deviceManager = new ZigbeeDeviceManager("/dev/ttyACM0");
 
