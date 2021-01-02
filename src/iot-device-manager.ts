@@ -27,10 +27,10 @@ export class IotDeviceManager {
     this.devices.forEach(async (device) => await device.start());
   }
 
-  handleDeviceUpdate(address: string, value: object) {
+  handleDeviceUpdate(address: string, cluster: string, value: object) {
     this.devices.map((device: SwitchDevice) => {
       if (device.getZigbeeAddress() === address) {
-        device.handleValueUpdate(value);
+        device.handleValueUpdate(cluster, value);
       }
     });
   }

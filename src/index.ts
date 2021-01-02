@@ -10,8 +10,8 @@ import ZigbeeDeviceManager from "./zigbeeDeviceManager";
   try {
     await deviceManager.start();
 
-    deviceManager.onDeviceUpdate = (addr, value) => {
-      iotDeviceManager.handleDeviceUpdate(addr, value);
+    deviceManager.onDeviceUpdate = (addr, cluster, value) => {
+      iotDeviceManager.handleDeviceUpdate(addr, cluster, value);
     };
   } catch (err) {
     console.log(err);

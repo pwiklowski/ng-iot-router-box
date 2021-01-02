@@ -32,16 +32,35 @@ const weatherDeviceConfig: DeviceConfig = {
 
 export class WeatherSensor extends ZigbeeDevice {
   pressed: boolean;
+  temperature: number;
+  humidity: number;
+  pressure: number;
 
   constructor(zigbeeAddress: string, name: string, deviceUuid: string) {
     super(zigbeeAddress, { ...weatherDeviceConfig, name, deviceUuid });
   }
 
-  handleValueUpdate(value: any) {
-    const temperature = value.msTemperatureMeasurement.attributes.measuredValue / 100;
-    const humidity = value.msRelativeHumidity.attributes.measuredValue / 100;
-    const pressure = value.msPressureMeasurement.attributes.measuredValue;
+  handleValueUpdate(cluster: string, value: any) {
+    console.log(cluster, value);
 
-    this.updateValue(VARIABLE_UUID, { temperature, humidity, pressure });
+    if (cluster === "genBasic" && value.hasOwnProperty("65281")) {
+      this.temperature = value["65281"]["100"] / 100;
+      this.humidity = value["65281"]["101"] / 100;
+      this.pressure = value["65281"]["102"] / 100;
+    }
+
+    if (cluster === "msTemperatureMeasurement") {
+      this.temperature = value.measuredValue / 100;
+    }
+
+    if (cluster === "msRelativeHumidity") {
+      this.humidity = value.measuredValue / 100;
+    }
+
+    if (cluster === "msPressureMeasurement") {
+      this.pressure = value.scaledValue / 10;
+    }
+
+    this.updateValue(VARIABLE_UUID, { temperature: this.temperature, humidity: this.humidity, pressure: this.pressure });
   }
 }

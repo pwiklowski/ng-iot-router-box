@@ -28,8 +28,10 @@ export default class ZigbeeDeviceManager {
   }
 
   onMessage(msg) {
+    console.log(msg.endpoint.deviceIeeeAddress, msg.cluster, msg.data);
+
     if (msg.type === "attributeReport") {
-      this.onDeviceUpdate(msg.endpoint.deviceIeeeAddress, msg.endpoint.clusters);
+      this.onDeviceUpdate(msg.endpoint.deviceIeeeAddress, msg.cluster, msg.data);
     }
   }
 

@@ -27,22 +27,18 @@ const switchDeviceConfig: DeviceConfig = {
 };
 
 export class SwitchDevice extends ZigbeeDevice {
-  pressed: boolean;
-
   constructor(zigbeeAddress: string, name: string, deviceUuid: string) {
     super(zigbeeAddress, { ...switchDeviceConfig, name, deviceUuid });
   }
 
-  handleValueUpdate(value: any) {
-    if (this.pressed) {
-      this.pressed = false;
-    } else if (value.genOnOff.attributes.onOff === 0) {
-      this.updateValue(VARIABLE_UUID, { onOff: 1 });
-      this.updateValue(VARIABLE_UUID, { onOff: 0 });
-      this.pressed = true;
-    } else if (value.genOnOff.attributes.onOff === 1) {
-      this.updateValue(VARIABLE_UUID, { onOff: value.genOnOff.attributes["32768"] });
-      this.updateValue(VARIABLE_UUID, { onOff: 0 });
+  handleValueUpdate(cluster: string, value: any) {
+    if (cluster === "genOnOff") {
+      if (value.onOff !== undefined) {
+        this.updateValue(VARIABLE_UUID, { onOff: value.onOff === 0 ? 1 : 0 });
+      } else if (value["32768"] !== undefined) {
+        this.updateValue(VARIABLE_UUID, { onOff: value["32768"] });
+        this.updateValue(VARIABLE_UUID, { onOff: 0 });
+      }
     }
   }
 }

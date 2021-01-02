@@ -20,7 +20,7 @@ export class ZigbeeDevice extends IotDevice {
     return this.zigbeeAddress;
   }
 
-  handleValueUpdate(value: any) {}
+  handleValueUpdate(cluster: string, value: any) {}
 
   async readAuthData() {
     const data = (await fs.promises.readFile(this.getAuthConfigFilename())).toString("utf-8");
